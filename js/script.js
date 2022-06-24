@@ -10,6 +10,9 @@ const parrafoNombre = document.createElement("p");
 const input = document.querySelector('.input');
 const agregar = document.querySelector('.boton_agregar');
 const contenedor = document.querySelector ('.container');
+let numero;
+let contadorGanadas;
+let contadorPerdidas;
 
 class Nombre {
     constructor (nombreUsuario) {
@@ -86,30 +89,33 @@ btnSpock.addEventListener("click", () => {
 
 
 //!se agrego argumento a la fn
-
+//? se agrego imagen elegiada por la cpu
 let fnRivalCpu = (valorCpu) => {
-    
+    let imagenMaquina = document.getElementById("imgMaquina")
     cpu = valorCpu
 
     if (cpu === 0) {
-        cpu = piedra //! ahora cpu llama al valor del indice del arrayEleccion
+        imagenMaquina.src = `img/${tijera}.png`
+        return cpu = piedra //! ahora cpu llama al valor del indice del arrayEleccion
     } 
     else if (cpu === 1) {
-        cpu = papel //! ahora cpu llama al valor del indice del arrayEleccion
+        imagenMaquina.src = `img/${papel}.png`
+        return cpu = papel //! ahora cpu llama al valor del indice del arrayEleccion
     } 
     else if (cpu === 2){
-        cpu = tijera //! ahora cpu llama al valor del indice del arrayEleccion
+        imagenMaquina.src = `img/${tijera}.png`
+        return cpu = tijera //! ahora cpu llama al valor del indice del arrayEleccion
     }
     else if (cpu === 3){
-        cpu = lagarto //! ahora cpu llama al valor del indice del arrayEleccion
+        imagenMaquina.src = `img/${lagarto}.png`
+        return cpu = lagarto //! ahora cpu llama al valor del indice del arrayEleccion
     }
     else if (cpu === 4){
-        cpu = spock //! ahora cpu llama al valor del indice del arrayEleccion
+        imagenMaquina.src = `img/${spock}.png`
+        return cpu = spock //! ahora cpu llama al valor del indice del arrayEleccion
     }
 
-    return cpu
 }
-
 
 //!se agrego arg a la fn
 let fnUsuario = (valorUsuario) => {
@@ -117,8 +123,8 @@ let fnUsuario = (valorUsuario) => {
     // valorUsuario = prompt("Piedra, Papel o Tijera").toLowerCase()
     eleccion = valorUsuario
 
-        //! se cambio el if por un SWITCH y se agrego un WHILE para que vuelva a ingresar una opcion
-        while(eleccion){
+        //! se cambio el if por un SWITCH
+        
             switch(eleccion){
                 case "piedra":
                     return eleccion = piedra
@@ -135,12 +141,27 @@ let fnUsuario = (valorUsuario) => {
                 case "spock":
                     return eleccion = spock
             }
-        }
+        
+    }
+
+//?puntaje
+let ganar = () => {
+    let ganador = document.getElementById("marcadorUsuario")
+    numero = Number(ganador.innerHTML) + 1
+    ganador.innerHTML = numero
+    return
+    }
+    
+let perder = () => {
+    let perder = document.getElementById("marcadorMaquina")
+    numero = Number(perder.innerHTML) + 1
+    perder.innerHTML = numero
+    return
     }
 
 //!se cambie el if por un condicional SWICHT y se manipulo el DOM
 let fnVersus = () => {
-
+    
     if(cpu===eleccion){
         texto.innerHTML = `¡EMPATASTE! ambos eligieron ${eleccion}`
         texto.style.backgroundColor = "orange"
@@ -152,26 +173,63 @@ let fnVersus = () => {
         texto.innerHTML = `¡GANASTE!, la cpu eligio ${cpu}`
         texto.style.backgroundColor = "green"
         texto.style.color = "white"
+        ganar()
+       
     } 
     else if ((eleccion === "piedra" && cpu === "papel") || (eleccion === "piedra" && cpu === "spock") || (eleccion === "papel" && cpu === "tijera") || (eleccion === "papel" && cpu === "lagarto") || (eleccion === "tijera" && cpu === "piedra") || (eleccion === "tijera" && cpu === "spock") || (eleccion === "lagarto" && cpu === "piedra") || (eleccion === "lagarto" && cpu === "tijera") || (eleccion === "spock" && cpu === "papel") || (eleccion === "spock" && cpu === "lagarto")) {
         
         texto.innerHTML = `¡PERDISTE!, la cpu eligio ${cpu}`
         texto.style.backgroundColor = "red"
         texto.style.color = "white"
+        perder()
+        
     }
 }
 
+//?muestra la imagen elegida por el usuario
+let fnMostrarUsuario = (opcion) => {
+    let imagenUsuario = document.getElementById("imgUsuario")
+    imagenUsuario.src = `img/${opcion}.png`
+}
 
-//Juego
+//? se agrego cantidad de veces que se juega contra la maquina
+let resultadoFinal = () => {
+     contadorGanadas = document.getElementById("marcadorUsuario")
+     let ganaste = Number(contadorGanadas.innerHTML)
+    if(ganaste === 10){
+        // alert("Ganaste 10 partidas contra la cpu")
+        texto.innerHTML = `FELICITACIONES - Ganaste ${ganaste} partidas contra la CPU`
+        texto.style.background="purple"
+        contadorGanadas.innerHTML = 0
+        contadorPerdidas.innerHTML = 0
+    }
+
+     contadorPerdidas = document.getElementById("marcadorMaquina")
+     let perdiste = Number(contadorPerdidas.innerHTML)
+     if(perdiste === 10){
+        // alert("Perdiste 10 partidas contra la cpu")
+        texto.innerHTML = `SIGUE INTENTANDO - Perdiste ${perdiste} partidas contra la CPU`
+        texto.style.background="black"
+        contadorPerdidas.innerHTML = 0
+        contadorGanadas.innerHTML = 0        
+    }
+}
+
 let playGame = (opcionUsuario) => {
-
+    if(input.value!==""){
         let largoArray = arrayEleccion.length //!se movio de lugar la variable
         let cpu = Math.round(Math.random()*(largoArray-1)) //!se movio de lugar la variable
         let eleccion = opcionUsuario //!//!se movio de lugar la variable
         
         fnRivalCpu(cpu) //!se coloco argumentos a la fn
         fnUsuario(eleccion) //!se coloco argumentos a la fn
-        fnVersus()
-    }
-
+        fnMostrarUsuario(eleccion) //!se agrego mostrar imagen usuario
     
+        fnVersus()
+        resultadoFinal()
+    } else {
+        alert("Te olvidaste de ingresar el nombre")
+    }
+}
+
+
